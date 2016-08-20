@@ -14,14 +14,19 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainmenu.cpp \
-    student.cpp \
-    fileowner.cpp
+    fileowner.cpp \
+    studentseditor.cpp \
+    twoitemobject.cpp \
+    dataservice.cpp
 
 HEADERS  += mainmenu.h \
-    student.h \
-    fileowner.h
+    fileowner.h \
+    studentseditor.h \
+    twoitemobject.h \
+    dataservice.h
 
-FORMS    += mainmenu.ui
+FORMS    += mainmenu.ui \
+    studentseditor.ui
 
 RESOURCES += \
     nameslist.qrc

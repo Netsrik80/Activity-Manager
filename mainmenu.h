@@ -2,6 +2,7 @@
 #define MAINMENU_H
 
 #include <QMainWindow>
+#include "studentseditor.h"
 
 namespace Ui {
 class MainMenu;
@@ -15,10 +16,11 @@ public:
     explicit MainMenu(QWidget *parent = 0);
     ~MainMenu();
 
-private slots:
-    void on_pushButton_liste_1_clicked();
+    StudentsEditor studEdit;
 
-    void on_pushButton_liste_2_clicked();
+private slots:
+
+    void on_pushButton_namesList_clicked();
 
 private:
     Ui::MainMenu *ui;

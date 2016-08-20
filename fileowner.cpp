@@ -5,9 +5,15 @@
 
 using namespace std;
 
+void Fileowner::setDatabase()
+{
+    studentsDB = "nameslist.csv";
+    //activitiesDB =
+}
+
 Fileowner::Fileowner()
 {
-
+    setDatabase();
 }
 
 ///Writes data (a QStringList) to the file
@@ -34,7 +40,7 @@ void Fileowner::writeToFile(QString reqFile)
     myfile.close();
 }
 
-///Reads the Data from the file and creates a QVector that contains the students as objects
+///Reads the data from the file and creates a QVector that contains objects with two values (id & name)
 void Fileowner::readFromFile(QString reqFile)
 {
     ///open file
@@ -54,11 +60,11 @@ void Fileowner::readFromFile(QString reqFile)
         QString name = testList[1];
         int id = idVari.toInt();
 
-        Student aStudent(id, name);
-        allStudents.append(aStudent);
+        TwoItemObject a2_Obj(id, name);
+        all2_Obj.append(a2_Obj);
     }
 
-    testString = allStudents[2].get_name();
+    testString = all2_Obj[2].get_name();
 
     ///close file
     myfile.flush();

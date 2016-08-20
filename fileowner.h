@@ -1,7 +1,7 @@
 #ifndef FILEOWNER_H
 #define FILEOWNER_H
 
-#include "student.h"
+#include "twoitemobject.h"
 #include <QVector>
 #include <QString>
 
@@ -13,9 +13,7 @@ class Fileowner
 private:
     void writeToFile(QString);
     void readFromFile(QString);
-
-    ///Filenames
-    //QString studentNamesDB = "nameslist.csv";
+    void setDatabase();
 
 public:
     Fileowner();
@@ -23,12 +21,12 @@ public:
     void get_Data(QString);
     void set_Data(QString);
 
-    QVector<Student> allStudents;
+    QVector<TwoItemObject>all2_Obj;
     QString testString;
 
-    ///public Filenames
-    //QString studentNames = studentNamesDB;
-    QString studentNames = "nameslist.csv";
+    ///Filenames
+    QString studentsDB;
+    QString activitiesDB;
 };
 
 #endif // FILEOWNER_H
