@@ -1,4 +1,4 @@
-///Creates object with two values (int & QString)
+///object with two values (int & QString)
 
 #include "twoitemobject.h"
 

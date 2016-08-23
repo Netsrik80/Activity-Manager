@@ -10,20 +10,21 @@ Edit_Name::Edit_Name(QWidget *parent) :
 }
 
 
-
 Edit_Name::~Edit_Name()
 {
     delete ui;
+
 }
 
 void Edit_Name::on_pushButton_clicked()
 {
     get_name();
     this->close();
-    qDebug("Edit_Name closed");
+
 }
 
 QString Edit_Name::get_name()
 {
     return ui->lineEdit->text();
+
 }

@@ -9,7 +9,6 @@ MainMenu::MainMenu(QWidget *parent) :
     ui(new Ui::MainMenu)
 {
     ui->setupUi(this);
-    qDebug("mainmenu Setup");
 
 }
 
@@ -18,7 +17,6 @@ void MainMenu::on_pushButton_namesList_clicked()
 {
     StudentsEditor studEdit;
     studEdit.exec();
-    qDebug("exec studedit");
 
 }
 

@@ -3,10 +3,10 @@
 
 #include <QString>
 
-
 class TwoItemObject
 {
 private:
+    ///private member variables
     int id;
     QString name;
 

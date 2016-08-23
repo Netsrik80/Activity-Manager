@@ -4,7 +4,6 @@
 #include <QDialog>
 #include <QString>
 #include <QStringListModel>
-#include <QAbstractListModel>
 #include "dataservice.h"
 
 namespace Ui {
@@ -19,6 +18,7 @@ public:
     explicit StudentsEditor(QWidget *parent = 0);
     ~StudentsEditor();
 
+
 private slots:
     void on_button_add_clicked();
 
@@ -32,12 +32,13 @@ private slots:
 
     void on_button_edit_clicked();
 
+    void on_pushButton_search_clicked();
+
 private:
     Ui::StudentsEditor *ui;
     void setupQListView();
-    QString thisEntType;
     QStringListModel thisModel;
-    Dataservice dataRequest;
+    Dataservice dataRequest; ///provides all accesses to the data
 
 };
 

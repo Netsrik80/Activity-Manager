@@ -1,91 +1,68 @@
-///provides data, access to fileowner
+///provides data for the gui, has access to fileowner
 
 #include "dataservice.h"
 #include "fileowner.h"
+#include <iterator>
+#include <QVariant>
 
 using namespace std;
 
+///public: constructor
 Dataservice::Dataservice()
 {
 
 }
 
-Dataservice::Dataservice()
+
+///public: setup data for the dataservice
+void Dataservice::init(QString entType)
 {
-
-}
-
-/*//creates vectors from files = make Vector
-void Dataservice::make_vector(QString entType)
-{    
+    Fileowner req2fileOwner;
     if(entType == "students")
     {
-    Fileowner access2studs;
-    access2studs.get_Data(access2studs.studentsDB);
-    current_Vec = access2studs.all2_Obj;
+        curr_DB = req2fileOwner.studentsDB;
+        req2fileOwner.get_Data(curr_DB);
+        for(int i = 0; i < req2fileOwner.all2_Obj.size(); i++)
+        {
+            current_map.insert(req2fileOwner.all2_Obj[i].get_id(), req2fileOwner.all2_Obj[i].get_name());
+        }
     }
 
     if(entType == "activites")
     {
-    Fileowner access2acts;
-    access2acts.get_Data(access2acts.activitiesDB);
-    act_Vec = access2acts.all2_Obj;
-    }
-    qDebug("made studVec");
-
-}
-*/
-
-//select on of the vectors, that has been made by make_vector()
-QVector<TwoItemObject> Dataservice::set_vector(QString entType)
-{
-    if(entType == "students")
-    {
-        qDebug("stud_Vec");
-        return stud_Vec;
-
-    }
-
-    if(entType == "activities")
-    {
-        return act_Vec;
-
-    }else{
-        qDebug("no vector available");
-
-    }
-}
-
-QStringList Dataservice::get_stringList(QString entType)
-{
-        qlist_onlyNames.clear();
-        QVariant vecSize = set_vector(entType).size();
-
-        qDebug("qlist_names clear");
-
-        for(int i = 0; i < set_vector(entType).size(); i++)
+        req2fileOwner.get_Data(req2fileOwner.activitiesDB);
+        for(int i = 0; i < req2fileOwner.all2_Obj.size(); i++)
         {
-            QVariant id = set_vector(entType)[i].get_id();
-            qlist_onlyNames.insert(i, "ID: "+id.toString()+", "+"Name: "+set_vector(entType)[i].get_name());
-            qDebug("setup a stringlist");
+            current_map.insert(req2fileOwner.all2_Obj[i].get_id(), req2fileOwner.all2_Obj[i].get_name());
         }
-
-   return qlist_onlyNames;
+    }
 
 }
 
 
-int Dataservice::create_ID(QString entType)
+///public: creates a string list from the current map (only values)
+QStringList Dataservice::get_stringList()
+{
+        return current_map.values();
+
+}
+
+
+///public function to save changes
+void Dataservice::save()
+{
+    add_data2file();
+}
+
+
+///private: automatically assignment of IDs
+int Dataservice::create_ID()
 {
     int newID = 1000;
 
-    for(int i = 0; i < set_vector(entType).size(); i++)
+    while(current_map.contains(newID))
     {
-        if(set_vector(entType)[i].get_id() == newID)
-        {
-            qDebug("newID");
-            newID += 1;
-        }
+        newID += 1;
     }
 
     return newID;
@@ -93,101 +70,82 @@ int Dataservice::create_ID(QString entType)
 }
 
 
-
-void Dataservice::add_data2vec(QString entType, QString newName)
+///creation of a new object and insertion in map
+void Dataservice::add_data(QString newName)
 {
     TwoItemObject newEntry;
     newEntry.set_name(newName);
-    newEntry.set_id(create_ID(entType));
+    newEntry.set_id(create_ID());
 
-    ///set_vector does not work - why???
-    if(entType =="students")
-    {
-        stud_Vec.append(newEntry);
-        qDebug("did new entry");
-    }
+    current_map.insert(newEntry.get_id(), newEntry.get_name());
 
-    if(entType == "activities")
-    {
-        act_Vec.append(newEntry);
-
-    }
 }
 
-bool Dataservice::remove_dataFromVec(QString entType, int id)
+
+///removes an item or evoke an error-message for the user
+bool Dataservice::remove_data(int id)
 {
-    ///set_vector does not work - why???
-    if(entType =="students")
+    if(current_map.remove(id) > 0)
     {
-        for(int i = 0; i < stud_Vec.size(); i++)
-        {
-            if(stud_Vec[i].get_id() == id)
-            {
-                stud_Vec.remove(i);
-                qDebug("enter if");
-                return true;
-            }
-
-            if(i+1 == stud_Vec.size())
-            {
-                return false;
-            }
-        }
-
+        return true;
     }
 
-    if(entType == "activities")
-    {
-        for(int i = 0; i < act_Vec.size(); i++)
-        {
-            if(act_Vec[i].get_id() == id)
-            {
-                act_Vec.remove(i);
-                return 0;
-                break;
-            }
-            else{
-                return 1;
-                }
-        }
-
-    }
-
-    get_stringList(entType);
+    return false;
 
 }
 
 
-void Dataservice::add_data2file(QString entType)
+///private: sends current data to the fileowner to save it in the file
+void Dataservice::add_data2file()
 {
     Fileowner saveRequest;
-    for(int i = 0; i < set_vector(entType).size(); i++)
-    {
-       QVariant id = set_vector(entType)[i].get_id();
-       qlist_toFile.append(id.toString()+","+set_vector(entType)[i].get_name());
-    }
-    saveRequest.set_Data(saveRequest.studentsDB, qlist_toFile);
+    saveRequest.set_Data(curr_DB, make_stringList_keysAndVals());
 
 }
 
-int Dataservice::get_selected_ID()
+
+///changes a value in the map
+void Dataservice::edit_data(QString name2change)
 {
-    return this->selected_ID;
+    current_map.insert(curr_id, name2change);
+
 }
 
-void Dataservice::change_Name(QString entType, QString name2change)
+
+///public: returns an ID from map by an index of a QStringList and stores the ID, index of list and map should be the same...
+int Dataservice::get_choosenMember(int index)
 {
-    for(int i = 0; i < stud_Vec.size(); i++)
+    QList< int > currList = current_map.keys();
+    curr_id = currList[index];
+    return curr_id;
+
+}
+
+///private: setup a QList<Strings> with keys and values to be sent to fileowner (add_Data2file)
+QStringList Dataservice::make_stringList_keysAndVals()
+{
+    QStringList keysAndVals_List;
+    QMap < int, QString > ::iterator i = current_map.begin();
+    while( i != current_map.end())
     {
-        qDebug("ID not found");
-        if(stud_Vec[i].get_id() == this->selected_ID)
-        {
-            stud_Vec[i].set_name(name2change);
-            break;
-        }
-        if(i+1 == stud_Vec.size())
-        {
-            qDebug("ID not found");
-        }
+        QVariant theKey = i.key();
+        keysAndVals_List.append(theKey.toString()+","+i.value());
+        i++;
+    }
+
+    return keysAndVals_List;
+
+}
+
+///public:
+bool Dataservice::isIDknown(int req_ID)
+{
+    if(current_map.contains(req_ID) == true)
+    {
+            return true;
+    }
+    else{
+          return false;
     }
 }
+
