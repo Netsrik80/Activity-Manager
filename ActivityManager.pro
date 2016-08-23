@@ -17,16 +17,19 @@ SOURCES += main.cpp\
     fileowner.cpp \
     studentseditor.cpp \
     twoitemobject.cpp \
-    dataservice.cpp
+    dataservice.cpp \
+    edit_name.cpp
 
 HEADERS  += mainmenu.h \
     fileowner.h \
     studentseditor.h \
     twoitemobject.h \
-    dataservice.h
+    dataservice.h \
+    edit_name.h
 
 FORMS    += mainmenu.ui \
-    studentseditor.ui
+    studentseditor.ui \
+    edit_name.ui
 
 RESOURCES += \
     nameslist.qrc

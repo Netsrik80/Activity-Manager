@@ -16,7 +16,6 @@ public:
     explicit MainMenu(QWidget *parent = 0);
     ~MainMenu();
 
-    StudentsEditor studEdit;
 
 private slots:
 
@@ -24,6 +23,7 @@ private slots:
 
 private:
     Ui::MainMenu *ui;
+
 };
 
 #endif // MAINMENU_H

@@ -9,6 +9,7 @@ void Fileowner::setDatabase()
 {
     studentsDB = "nameslist.csv";
     //activitiesDB =
+    //combinationsDB = 
 }
 
 Fileowner::Fileowner()

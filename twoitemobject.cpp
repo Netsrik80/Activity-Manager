@@ -2,6 +2,9 @@
 
 #include "twoitemobject.h"
 
+using namespace std;
+
+
 TwoItemObject::TwoItemObject()
 {
 

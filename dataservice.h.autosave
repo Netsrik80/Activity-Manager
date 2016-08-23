@@ -16,13 +16,16 @@ private:
     void receiveFromFileOwner();
     void makeQSLmodel(QStringList);
 
-    QVector<TwoItemObject> stud_Vec;
-    QVector<TwoItemObject> act_Vec;
+    QVector<TwoItemObject> first_Vec;
+    QVector<TwoItemObject> second_Vec;
+    QVector<TwoItemObject> third_Ve
 
     int create_ID(QString);
 
 public:
-    Dataservice();    
+    Dataservice();
+    Dataservice(QString);
+    Dataservice(QString, QString);    
 
     QStringList qlist_onlyNames;
     QStringList qlist_toFile;

@@ -9,7 +9,6 @@ class TwoItemObject
 private:
     int id;
     QString name;
-    void set_id(int); //public?
 
 public:
     ///constructors
@@ -18,6 +17,7 @@ public:
 
     ///set methods
     void set_name(QString);
+    void set_id(int); //public?
 
     ///get methods
     int get_id();

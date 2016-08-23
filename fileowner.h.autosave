@@ -26,6 +26,7 @@ public:
     ///public names for the files
     QString studentsDB;
     QString activitiesDB;
+    QString combinationsDB;
 };
 
 #endif // FILEOWNER_H
