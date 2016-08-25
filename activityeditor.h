@@ -1,23 +1,21 @@
-#ifndef STUDENTSEDITOR_H
-#define STUDENTSEDITOR_H
+#ifndef ACTIVITYEDITOR_H
+#define ACTIVITYEDITOR_H
 
 #include <QDialog>
-#include <QString>
-#include <QStringListModel>
 #include "dataservice.h"
+#include <QStringListModel>
 
 namespace Ui {
-class StudentsEditor;
+class ActivityEditor;
 }
 
-class StudentsEditor : public QDialog
+class ActivityEditor : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit StudentsEditor(QWidget *parent = 0);
-    ~StudentsEditor();
-
+    explicit ActivityEditor(QWidget *parent = 0);
+    ~ActivityEditor();
 
 private slots:
     void on_QListView_allMembers_clicked(const QModelIndex &index);
@@ -32,13 +30,11 @@ private slots:
 
     void on_pushButton_save_clicked();
 
-
 private:
-    Ui::StudentsEditor *ui;
+    Ui::ActivityEditor *ui;
     void setupQListView();
     QStringListModel thisModel;
     Dataservice dataRequest; ///only access to data
-
 };
 
-#endif // STUDENTSEDITOR_H
+#endif // ACTIVITYEDITOR_H

@@ -18,18 +18,31 @@ SOURCES += main.cpp\
     studentseditor.cpp \
     twoitemobject.cpp \
     dataservice.cpp \
-    edit_name.cpp
+    edit_name.cpp \
+    error_popup.cpp \
+    activityeditor.cpp \
+    manager_gui.cpp \
+    manager_data_admin.cpp
 
 HEADERS  += mainmenu.h \
     fileowner.h \
     studentseditor.h \
     twoitemobject.h \
     dataservice.h \
-    edit_name.h
+    edit_name.h \
+    error_popup.h \
+    activityeditor.h \
+    manager_gui.h \
+    manager_data_admin.h
 
 FORMS    += mainmenu.ui \
     studentseditor.ui \
-    edit_name.ui
+    edit_name.ui \
+    error_popup.ui \
+    activityeditor.ui \
+    manager_gui.ui
 
 RESOURCES += \
-    nameslist.qrc
+    nameslist.qrc \
+    activitylist.qrc \
+    combinationslist.qrc

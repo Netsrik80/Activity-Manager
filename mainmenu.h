@@ -21,6 +21,10 @@ private slots:
 
     void on_pushButton_namesList_clicked();
 
+    void on_pushButton_activityList_clicked();
+
+    void on_pushButton_actManager_clicked();
+
 private:
     Ui::MainMenu *ui;
 

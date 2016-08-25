@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>activitylist.csv</file>
+    </qresource>
+</RCC>

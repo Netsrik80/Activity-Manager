@@ -10,8 +10,11 @@
     <height>582</height>
    </rect>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::TabFocus</enum>
+  </property>
   <property name="windowTitle">
-   <string>Add or remove students or edit their name</string>
+   <string>STUDENTS</string>
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>
@@ -62,6 +65,9 @@
        </disabled>
       </palette>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="autoFillBackground">
       <bool>false</bool>
      </property>
@@ -70,7 +76,7 @@
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;list of all members&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;list of all&lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;you can click on an item to choose it or use the search field below, if you want (exact spelling is required)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
@@ -80,6 +86,9 @@ p, li { white-space: pre-wrap; }
      <property name="cursor" stdset="0">
       <cursorShape>PointingHandCursor</cursorShape>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="accessibleName">
       <string/>
      </property>
@@ -88,12 +97,19 @@ p, li { white-space: pre-wrap; }
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
-      <widget class="QLineEdit" name="lineEdit_search"/>
+      <widget class="QLineEdit" name="lineEdit_search">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="pushButton_search">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="text">
-        <string>search </string>
+        <string>search</string>
        </property>
       </widget>
      </item>
@@ -146,6 +162,9 @@ p, li { white-space: pre-wrap; }
          </disabled>
         </palette>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="autoFillBackground">
         <bool>false</bool>
        </property>
@@ -162,7 +181,11 @@ p, li { white-space: pre-wrap; }
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QLineEdit" name="lineEdit_newInput"/>
+        <widget class="QLineEdit" name="lineEdit_newInput">
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="button_add">
@@ -171,6 +194,9 @@ p, li { white-space: pre-wrap; }
            <width>96</width>
            <height>0</height>
           </size>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
          </property>
          <property name="text">
           <string>add</string>
@@ -226,6 +252,9 @@ p, li { white-space: pre-wrap; }
        </disabled>
       </palette>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="autoFillBackground">
       <bool>false</bool>
      </property>
@@ -249,12 +278,18 @@ p, li { white-space: pre-wrap; }
          <height>51</height>
         </size>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
       </widget>
      </item>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QPushButton" name="button_remove">
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
          <property name="text">
           <string>remove</string>
          </property>
@@ -262,6 +297,9 @@ p, li { white-space: pre-wrap; }
        </item>
        <item>
         <widget class="QPushButton" name="button_edit">
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
          <property name="text">
           <string>edit</string>
          </property>
@@ -315,6 +353,9 @@ p, li { white-space: pre-wrap; }
         </colorrole>
        </disabled>
       </palette>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
      </property>
      <property name="autoFillBackground">
       <bool>false</bool>
@@ -454,6 +495,9 @@ p, li { white-space: pre-wrap; }
        <pointsize>12</pointsize>
       </font>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="text">
       <string>save all changes and exit</string>
      </property>
@@ -461,6 +505,17 @@ p, li { white-space: pre-wrap; }
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>QListView_allMembers</tabstop>
+  <tabstop>lineEdit_search</tabstop>
+  <tabstop>pushButton_search</tabstop>
+  <tabstop>lineEdit_newInput</tabstop>
+  <tabstop>button_add</tabstop>
+  <tabstop>lineEdit_choosenItem</tabstop>
+  <tabstop>button_remove</tabstop>
+  <tabstop>button_edit</tabstop>
+  <tabstop>pushButton_save</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

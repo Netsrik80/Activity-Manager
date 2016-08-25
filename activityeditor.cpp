@@ -1,65 +1,34 @@
-#include "studentseditor.h"
-#include "ui_studentseditor.h"
+#include "activityeditor.h"
+#include "ui_activityeditor.h"
 #include "dataservice.h"
 #include "edit_name.h"
 #include "error_popup.h"
 
-
-using namespace std;
-
-StudentsEditor::StudentsEditor(QWidget *parent) :
+ActivityEditor::ActivityEditor(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::StudentsEditor)
+    ui(new Ui::ActivityEditor)
 {
     ui->setupUi(this);
-    dataRequest.init("students");
+    dataRequest.init("activities");
     setupQListView();
-
 }
 
-
-StudentsEditor::~StudentsEditor()
+ActivityEditor::~ActivityEditor()
 {
     delete ui;
-
 }
 
 
-void StudentsEditor::setupQListView()
+void ActivityEditor::setupQListView()
 {
     thisModel.setStringList(dataRequest.get_stringList());
     ui->QListView_allMembers->setModel(&thisModel);
+    qDebug("setupListView");
 
 }
 
 
-void StudentsEditor::on_button_add_clicked()
-{
-    if(!dataRequest.get_stringList().contains(ui->lineEdit_newInput->text()))
-    {
-        if(ui->lineEdit_newInput->text() != NULL)
-        {
-            dataRequest.add_data(ui->lineEdit_newInput->text());
-            ui->lineEdit_newInput->clear();
-        }
-        else{
-            Error_popup err;
-            err.set_text("Entry missing! Please enter a text.");
-            err.exec();
-            }
-    }
-    else{
-            Error_popup err;
-            err.set_text("This entry already exists. Change entry.");
-            err.exec();
-            }
-
-    setupQListView();
-
-}
-
-
-void StudentsEditor::on_button_remove_clicked()
+void ActivityEditor::on_button_remove_clicked()
 {
     if(ui->lineEdit_choosenItem->text() != NULL)
     {
@@ -87,7 +56,7 @@ void StudentsEditor::on_button_remove_clicked()
 
 
 ///
-void StudentsEditor::on_QListView_allMembers_clicked(const QModelIndex &index)
+void ActivityEditor::on_QListView_allMembers_clicked(const QModelIndex &index)
 {
     int index_clicked = index.row();
     QVariant received_id = dataRequest.get_choosenMember(index_clicked);
@@ -96,7 +65,7 @@ void StudentsEditor::on_QListView_allMembers_clicked(const QModelIndex &index)
 }
 
 ///save data to file
-void StudentsEditor::on_pushButton_save_clicked()
+void ActivityEditor::on_pushButton_save_clicked()
 {
     dataRequest.save();
     this->close();
@@ -105,7 +74,7 @@ void StudentsEditor::on_pushButton_save_clicked()
 
 
 ///new dialog to change the name (=value in the map)
-void StudentsEditor::on_button_edit_clicked()
+void ActivityEditor::on_button_edit_clicked()
 {
     QVariant req_ID = ui->lineEdit_choosenItem->text();
     if(ui->lineEdit_choosenItem->text() != NULL
@@ -134,7 +103,7 @@ void StudentsEditor::on_button_edit_clicked()
 
 
 ///
-void StudentsEditor::on_pushButton_search_clicked()
+void ActivityEditor::on_pushButton_search_clicked()
 {
     if(dataRequest.get_stringList().contains(ui->lineEdit_search->text()))
     {
@@ -156,4 +125,29 @@ void StudentsEditor::on_pushButton_search_clicked()
 
     }
 
+}
+
+void ActivityEditor::on_button_add_clicked()
+{
+
+    if(!dataRequest.get_stringList().contains(ui->lineEdit_newInput->text()))
+    {
+        if(ui->lineEdit_newInput->text() != NULL)
+        {
+            dataRequest.add_data(ui->lineEdit_newInput->text());
+            ui->lineEdit_newInput->clear();
+        }
+        else{
+            Error_popup err;
+            err.set_text("Entry missing! Please enter a text.");
+            err.exec();
+            }
+    }
+    else{
+            Error_popup err;
+            err.set_text("This entry already exists. Change entry.");
+            err.exec();
+            }
+
+    setupQListView();
 }

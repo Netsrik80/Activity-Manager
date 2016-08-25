@@ -16,6 +16,7 @@ Edit_Name::~Edit_Name()
 
 }
 
+///Get an String in a lineEdit
 void Edit_Name::on_pushButton_clicked()
 {
     get_name();
@@ -23,6 +24,7 @@ void Edit_Name::on_pushButton_clicked()
 
 }
 
+///Return of a string, for other GUIs
 QString Edit_Name::get_name()
 {
     return ui->lineEdit->text();
