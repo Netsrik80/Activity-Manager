@@ -14,14 +14,14 @@ TwoItemObject::TwoItemObject(int aNumber, QString aWord)
 {
     set_id(aNumber);
     set_name(aWord);
-    set_id2(0);///?
+    set_id2(0);///needed?
 }
 
 TwoItemObject::TwoItemObject(int studID, int actID)
 {
     set_id(studID);
     set_id2(actID);
-    set_name("");///?
+    set_name("");///needed?
 }
 
 void TwoItemObject::set_id(int number)

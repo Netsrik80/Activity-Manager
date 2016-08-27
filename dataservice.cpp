@@ -4,6 +4,7 @@
 #include "fileowner.h"
 #include <iterator>
 #include <QVariant>
+#include <QStringList>
 
 using namespace std;
 
@@ -19,72 +20,28 @@ void Dataservice::init(QString entType)
     Fileowner req2fileOwner;
     if(entType == "students")
     {
+        current_map.clear();
         curr_DB = req2fileOwner.studentsDB;
-        start_ID = 1000;
+        start_ID = 1000; ///if this value would be changed, this may causes problems
         req2fileOwner.get_Data(curr_DB);
-        for(int i = 0; i < req2fileOwner.all2_Obj.size(); i++)
+        for(int i = 0; i < req2fileOwner.vec_from_filedata.size(); i++)
         {
-            current_map.insert(req2fileOwner.all2_Obj[i].get_id(), req2fileOwner.all2_Obj[i].get_name());
+            current_map.insert(req2fileOwner.vec_from_filedata[i].get_id(), req2fileOwner.vec_from_filedata[i].get_name());
         }
     }
 
     if(entType == "activities")
     {
+        current_map.clear();
         curr_DB = req2fileOwner.activitiesDB;
-        start_ID = 100;
+        start_ID = 100; ///if this value would be changed, this may causes problems
         req2fileOwner.get_Data(req2fileOwner.activitiesDB);
-        for(int i = 0; i < req2fileOwner.all2_Obj.size(); i++)
+        for(int i = 0; i < req2fileOwner.vec_from_filedata.size(); i++)
         {
-            current_map.insert(req2fileOwner.all2_Obj[i].get_id(), req2fileOwner.all2_Obj[i].get_name());
+            current_map.insert(req2fileOwner.vec_from_filedata[i].get_id(), req2fileOwner.vec_from_filedata[i].get_name());
         }
-        qDebug("done init");
     }
-
-    if(entType == "combinations")
-    {
-        curr_DB = req2fileOwner.combinationsDB;
-        //start_ID = 100;
-        req2fileOwner.get_Data(req2fileOwner.combinationsDB);
-        for(int i = 0; i < req2fileOwner.all2_Obj.size(); i++)
-        {
-            current_map.insert(req2fileOwner.all2_Obj[i].get_id(), req2fileOwner.all2_Obj[i].get_name());
-        }
-        qDebug("done init");
-    }
-
-}
-
-
-///Creates a string list of the values of the current map
-QStringList Dataservice::get_stringList()
-{
-        return current_map.values();
-
-}
-
-
-///Public access to save data to file
-void Dataservice::save()
-{
-    add_data2file();
-
-}
-
-
-///Determining of an new ID
-int Dataservice::create_ID()
-{
-    int newID = start_ID;
-
-    while(current_map.contains(newID))
-    {
-        newID += 1;
-                if(newID >= start_ID*10)
-        {
-    }
-
-    return newID;
-
+//qDebug("done init");
 }
 
 
@@ -113,19 +70,10 @@ bool Dataservice::remove_data(int id)
 }
 
 
-///Sends data to fileOwner
-void Dataservice::add_data2file()
-{
-    Fileowner saveRequest;
-    saveRequest.set_Data(curr_DB, make_stringList_keysAndVals());
-
-}
-
-
 ///Changing of values in map
 bool Dataservice::edit_data(QString name2change)
 {
-    if(!get_stringList().contains(name2change))
+    if((!get_strList_allValues().contains(name2change)) && (!name2change.isEmpty()))
     {
              current_map.insert(curr_id, name2change);
              return true;
@@ -137,8 +85,30 @@ bool Dataservice::edit_data(QString name2change)
 }
 
 
+///Public access to save data to file
+void Dataservice::save()
+{
+    add_data2file();
+
+}
+
+
+///Check, if an given ID is known
+bool Dataservice::is_IDknown(int req_ID)
+{
+    if(current_map.contains(req_ID) == true)
+    {
+            return true;
+    }
+    else{
+          return false;
+    }
+
+}
+
+
 ///Return of an ID and storing that ID as current ID
-int Dataservice::get_choosenMember(int index)
+int Dataservice::get_ID_clickedName_byModelIndex(int index)
 {
     QList< int > currList = current_map.keys();
     curr_id = currList[index];
@@ -147,8 +117,56 @@ int Dataservice::get_choosenMember(int index)
 
 }
 
-///Creation of a string list of keys, comma and value
-QStringList Dataservice::make_stringList_keysAndVals()
+
+///Creates a string list of the values of the this->map
+QStringList Dataservice::get_strList_allValues()
+{
+        QStringList list = current_map.values();
+        return list;
+}
+
+
+///Return of map
+QMap<int, QString > Dataservice::get_map()
+{
+    return current_map;
+}
+
+
+///**********************************************private methods
+
+
+///private: Determining of an new ID
+int Dataservice::create_ID()
+{
+    int newID = start_ID;
+
+    while(current_map.contains(newID))
+    {
+        newID += 1;
+        if(newID >= start_ID*10)
+        {
+            return 0;
+            qDebug("error create_ID");
+        }
+    }
+
+    return newID;
+
+}
+
+
+///private: Send data to save to fileOwner
+void Dataservice::add_data2file()
+{
+    Fileowner saveRequest;
+    saveRequest.set_Data(curr_DB, make_strList_for_add_data2file());
+
+}
+
+
+///private: Creation of a string list of strings ("key,value")
+QStringList Dataservice::make_strList_for_add_data2file()
 {
     QStringList keysAndVals_List;
     QMap < int, QString > ::iterator i = current_map.begin();
@@ -163,16 +181,23 @@ QStringList Dataservice::make_stringList_keysAndVals()
 
 }
 
-///Check, if an given ID is known
-bool Dataservice::isIDknown(int req_ID)
+
+///******************************************************************needed???
+
+///
+
+///Exclusive service for manager_data_admin
+QList<int> Dataservice::get_values_by_key()
 {
-    if(current_map.contains(req_ID) == true)
-    {
-            return true;
-    }
-    else{
-          return false;
-    }
+    //return current_mmap.values(curr_id);
 
 }
+
+
+QList <int> Dataservice::get_key_list()
+{
+    //return current_map.keys();
+}
+
+
 

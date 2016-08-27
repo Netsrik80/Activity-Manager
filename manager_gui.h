@@ -2,7 +2,7 @@
 #define MANAGER_GUI_H
 
 #include <QDialog>
-#include "manager_data_admin.h"
+#include "manager_dataservice.h"
 #include <QListWidgetItem>
 
 namespace Ui {
@@ -24,16 +24,40 @@ private slots:
 
     void on_pushButton_classes_clicked();
 
-    void on_pushButton_save_2_clicked();
+    void on_pushButton_save_clicked();
 
     void on_pushButton_enter_clicked();
 
+    void on_pushButton_add_to_clicked();
+
+    void on_lineEdit_enterID_cursorPositionChanged(int arg1, int arg2);
+
+
+    void on_listWidget_inv_list_itemClicked(QListWidgetItem *item);
+
+    void on_pushButton_enter_inv_clicked();
+
+    void on_pushButton_remove_clicked();
+
+    void on_lineEdit_enterID_inv_cursorPositionChanged(int arg1, int arg2);
+
+    void on_pushButton_exit_clicked();
+
 private:
     Ui::Manager_GUI *ui;
-    void setup_listWidget(int);
-    Manager_Data_Admin data_admin;
-    int mode; ///1=student, 2=activities
-    int invert_mode(int, int);
+
+    ///Setup of the dataservice for the session
+    Manager_Dataservice m_datatservice;
+
+    void setup_leftListWidget();
+
+    void setup_rightListWidget();
+
+    ///1=students, 2=activities
+    int mode;
+
+    void view_status(int);
+
 };
 
 #endif // MANAGER_GUI_H

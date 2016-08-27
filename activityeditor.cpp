@@ -21,7 +21,7 @@ ActivityEditor::~ActivityEditor()
 
 void ActivityEditor::setupQListView()
 {
-    thisModel.setStringList(dataRequest.get_stringList());
+    thisModel.setStringList(dataRequest.get_strList_allValues());
     ui->QListView_allMembers->setModel(&thisModel);
     qDebug("setupListView");
 
@@ -59,7 +59,7 @@ void ActivityEditor::on_button_remove_clicked()
 void ActivityEditor::on_QListView_allMembers_clicked(const QModelIndex &index)
 {
     int index_clicked = index.row();
-    QVariant received_id = dataRequest.get_choosenMember(index_clicked);
+    QVariant received_id = dataRequest.get_ID_clickedName_byModelIndex(index_clicked);
     ui->lineEdit_choosenItem->setText(received_id.toString());
 
 }
@@ -78,7 +78,7 @@ void ActivityEditor::on_button_edit_clicked()
 {
     QVariant req_ID = ui->lineEdit_choosenItem->text();
     if(ui->lineEdit_choosenItem->text() != NULL
-            && dataRequest.isIDknown(req_ID.toInt()) == true)
+            && dataRequest.is_IDknown(req_ID.toInt()) == true)
     {
         QString newName;
         Edit_Name inputBox;
@@ -90,7 +90,7 @@ void ActivityEditor::on_button_edit_clicked()
         }
         else{
             Error_popup err;
-            err.set_text("Change not possible. This entry already exists.");
+            err.set_text("Change not possible.(empty or duplicate)");
             err.exec();
         }
     }
@@ -105,11 +105,11 @@ void ActivityEditor::on_button_edit_clicked()
 ///
 void ActivityEditor::on_pushButton_search_clicked()
 {
-    if(dataRequest.get_stringList().contains(ui->lineEdit_search->text()))
+    if(dataRequest.get_strList_allValues().contains(ui->lineEdit_search->text()))
     {
-        for(int i = 0; i < dataRequest.get_stringList().size(); i++)
+        for(int i = 0; i < dataRequest.get_strList_allValues().size(); i++)
         {
-            if(ui->lineEdit_search->text() == dataRequest.get_stringList().at(i))
+            if(ui->lineEdit_search->text() == dataRequest.get_strList_allValues().at(i))
             {
                 on_QListView_allMembers_clicked(thisModel.index(i));
                 ui->lineEdit_search->clear();
@@ -130,7 +130,7 @@ void ActivityEditor::on_pushButton_search_clicked()
 void ActivityEditor::on_button_add_clicked()
 {
 
-    if(!dataRequest.get_stringList().contains(ui->lineEdit_newInput->text()))
+    if(!dataRequest.get_strList_allValues().contains(ui->lineEdit_newInput->text()))
     {
         if(ui->lineEdit_newInput->text() != NULL)
         {

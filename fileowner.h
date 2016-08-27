@@ -21,7 +21,7 @@ public:
     void get_Data(QString);
     void set_Data(QString, QStringList);
 
-    QVector<TwoItemObject>all2_Obj;
+    QVector<TwoItemObject>vec_from_filedata;
 
     ///public names for the files
     QString studentsDB;

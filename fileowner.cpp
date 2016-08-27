@@ -2,6 +2,7 @@
 #include <QString>
 #include <QFile>
 #include <QTextStream>
+#include <QStringList>
 
 using namespace std;
 
@@ -61,7 +62,7 @@ void Fileowner::readFromFile(QString reqFile)
                 QVariant id2 = strList[1];
 
                 TwoItemObject a2_Obj(id1.toInt(), id2.toInt());
-                all2_Obj.append(a2_Obj);
+                vec_from_filedata.append(a2_Obj);
             }
         }while(!inLine.isNull());
     }
@@ -80,7 +81,7 @@ void Fileowner::readFromFile(QString reqFile)
                 int id = idVari.toInt();
 
                 TwoItemObject a2_Obj(id, name);
-                all2_Obj.append(a2_Obj);
+                vec_from_filedata.append(a2_Obj);
             }
         }while(!inLine.isNull());
     }

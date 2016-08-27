@@ -4,6 +4,7 @@
 #include "activityeditor.h"
 #include "manager_gui.h"
 
+
 using namespace std;
 
 MainMenu::MainMenu(QWidget *parent) :

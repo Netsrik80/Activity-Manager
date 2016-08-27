@@ -4,33 +4,50 @@
 #include "fileowner.h"
 #include "twoitemobject.h"
 #include <QMap>
+#include <QList>
 
 class Dataservice
 {
 private:
     QMap< int, QString > current_map;
-    QMultiMap< int, int > current_mmap;
+    int start_ID; /// for create_ID()
+    QString curr_DB;
+
     int curr_id;
     int curr_val;/// for multimap
-    QString curr_DB;
-    int start_ID;
 
     void add_data2file();
-    QStringList make_stringList_keysAndVals();
+    QStringList make_strList_for_add_data2file();
     int create_ID();
 
 
 public:
     Dataservice();
+
     void init(QString);
-    //void init(QString, QString);
-    void save();
+
     void add_data(QString);
+
     bool remove_data(int);
+
     bool edit_data(QString);
-    bool isIDknown(int);
-    QStringList get_stringList();
-    int get_choosenMember(int);
+
+    void save();
+
+    bool is_IDknown(int);
+
+    int get_ID_clickedName_byModelIndex(int);
+
+    QStringList get_strList_allValues();
+
+    QMap< int, QString > get_map();
+
+
+
+    QList< int > get_values_by_key();
+
+    QList <int> get_key_list();
+
 
 };
 
