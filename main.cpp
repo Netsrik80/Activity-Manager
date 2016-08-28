@@ -1,5 +1,5 @@
 /**
-* @mainpage Grundlagen der Informatik QT-Projekt
+* @mainpage QT-Projekt
 *
 * @section sec1 Short description
 * With this program you can combine data from two databases (in this case two csv-files) to

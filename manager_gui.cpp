@@ -45,7 +45,7 @@ void Manager_GUI::on_pushButton_students_clicked()
     ui->pushButton_classes->setDisabled(0);
 
     mode = 1;
-    m_datatservice.set_guiMode("students");
+    m_datatservice.set_guiMode("students"); //other mode = "activities"
     setup_leftListWidget();
 
 }
@@ -58,7 +58,7 @@ void Manager_GUI::on_pushButton_classes_clicked()
     ui->pushButton_classes->setDisabled(1);
 
     mode = 2;
-    m_datatservice.set_guiMode("activities");
+    m_datatservice.set_guiMode("activities"); //other mode = "students"
     setup_leftListWidget();
 
 }
@@ -102,7 +102,7 @@ void Manager_GUI::on_pushButton_add_to_clicked()
         ui->pushButton_remove->setDisabled(0);
 
         ui->listWidget_inv_list->clear();
-        m_datatservice.set_editMode("add");
+        m_datatservice.set_editMode("add"); // other mode = "remove"
         ui->pushButton_enter_inv->setText("add to");
 
         setup_rightListWidget();
@@ -119,7 +119,7 @@ void Manager_GUI::on_pushButton_remove_clicked()
     ui->pushButton_remove->setDisabled(1);
 
     ui->listWidget_inv_list->clear();
-    m_datatservice.set_editMode("remove");
+    m_datatservice.set_editMode("remove"); // other mode = "add"
     ui->pushButton_enter_inv->setText("remove from");
 
     setup_rightListWidget();
@@ -209,7 +209,7 @@ void Manager_GUI::setup_leftListWidget()
 void Manager_GUI::on_listWidget_list_itemClicked(QListWidgetItem *item)
 {
     QString clicked_name = item->text();
-    QVariant id = m_datatservice.get_ID_byName("leftWidget", clicked_name);
+    QVariant id = m_datatservice.get_ID_byName("leftWidget", clicked_name); // other option = "rightWidget"
     ui->lineEdit_enterID->setText(id.toString());
     ui->lineEdit_search->setText(item->text());
 
@@ -240,7 +240,7 @@ void Manager_GUI::on_listWidget_inv_list_itemClicked(QListWidgetItem *item)
 {
     QString clicked_name = item->text();
 
-    QVariant id = m_datatservice.get_ID_byName("rightWidget", clicked_name);
+    QVariant id = m_datatservice.get_ID_byName("rightWidget", clicked_name); // other option = "leftWidget"
     ui->lineEdit_search_inv->setText(clicked_name);
     ui->lineEdit_enterID_inv->setText(id.toString());
 

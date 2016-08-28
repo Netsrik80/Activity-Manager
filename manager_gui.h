@@ -38,9 +38,9 @@ private slots:
 
     void on_pushButton_remove_clicked();
 
-    void on_lineEdit_enterID_cursorPositionChanged(int arg1, int arg2);
+    void on_lineEdit_enterID_cursorPositionChanged(int, int);
 
-    void on_lineEdit_enterID_inv_cursorPositionChanged(int arg1, int arg2);
+    void on_lineEdit_enterID_inv_cursorPositionChanged(int, int);
 
     void clear_editor();
 
