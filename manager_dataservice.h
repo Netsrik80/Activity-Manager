@@ -20,7 +20,7 @@ private:
     int active_KEY_forEdit;
     int active_VAL_forEdit;
 
-    int active_editMode; //122 add; 211 remove
+    int active_editMode; //122 add; 211 remove; 111 erase
     int active_guiMode; //1 = students, 2=activities
 
     void init_man();
@@ -53,7 +53,6 @@ public:
 
     bool check_ID(int);
 
-
     void send_ID_toEdit(int);
 
     void do_edit_with(int);
@@ -63,6 +62,8 @@ public:
     void set_guiMode(QString);
 
     void save();
+
+
 
 };
 

@@ -1,3 +1,7 @@
+/**
+  * Dialog to enter a new value for a map
+  */
+
 #include "edit_name.h"
 #include "ui_edit_name.h"
 

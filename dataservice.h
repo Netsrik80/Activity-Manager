@@ -10,16 +10,22 @@ class Dataservice
 {
 private:
     QMap< int, QString > current_map;
-    int start_ID; /// for create_ID()
+
+    int start_ID;
+
     QString curr_DB;
 
     int curr_id;
-    int curr_val;/// for multimap
 
     void add_data2file();
+
     QStringList make_strList_for_add_data2file();
+
     int create_ID();
 
+    bool remove_warning;
+
+    QList<int> remove_container; /// Storage to be used to keep DBs consistent
 
 public:
     Dataservice();
@@ -41,13 +47,6 @@ public:
     QStringList get_strList_allValues();
 
     QMap< int, QString > get_map();
-
-
-
-    QList< int > get_values_by_key();
-
-    QList <int> get_key_list();
-
 
 };
 

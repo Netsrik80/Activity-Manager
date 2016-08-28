@@ -1,7 +1,10 @@
-///Provides data for the GUIs
+/**
+  * Datamanagement for students- and activityeditor
+  */
 
 #include "dataservice.h"
 #include "fileowner.h"
+#include "manager_dataservice.h"
 #include <iterator>
 #include <QVariant>
 #include <QStringList>
@@ -22,7 +25,7 @@ void Dataservice::init(QString entType)
     {
         current_map.clear();
         curr_DB = req2fileOwner.studentsDB;
-        start_ID = 1000; ///if this value would be changed, this may causes problems
+        start_ID = 1000; //if this value would be changed, this may causes problems (-> Manager_Dataservice::check_ID())
         req2fileOwner.get_Data(curr_DB);
         for(int i = 0; i < req2fileOwner.vec_from_filedata.size(); i++)
         {
@@ -34,14 +37,14 @@ void Dataservice::init(QString entType)
     {
         current_map.clear();
         curr_DB = req2fileOwner.activitiesDB;
-        start_ID = 100; ///if this value would be changed, this may causes problems
+        start_ID = 100; //if this value would be changed, this may causes problems (-> Manager_Dataservice::check_ID())
         req2fileOwner.get_Data(req2fileOwner.activitiesDB);
         for(int i = 0; i < req2fileOwner.vec_from_filedata.size(); i++)
         {
             current_map.insert(req2fileOwner.vec_from_filedata[i].get_id(), req2fileOwner.vec_from_filedata[i].get_name());
         }
     }
-//qDebug("done init");
+    remove_warning == false;
 }
 
 
@@ -62,7 +65,12 @@ bool Dataservice::remove_data(int id)
 {
     if(current_map.remove(id) > 0)
     {
+        remove_warning = true;
+
+        remove_container.append(id);
+
         return true;
+
     }
 
     return false;
@@ -70,7 +78,7 @@ bool Dataservice::remove_data(int id)
 }
 
 
-///Changing of values in map
+/// Changing of values in map
 bool Dataservice::edit_data(QString name2change)
 {
     if((!get_strList_allValues().contains(name2change)) && (!name2change.isEmpty()))
@@ -85,7 +93,7 @@ bool Dataservice::edit_data(QString name2change)
 }
 
 
-///Public access to save data to file
+/// Public access to save data to file
 void Dataservice::save()
 {
     add_data2file();
@@ -93,7 +101,7 @@ void Dataservice::save()
 }
 
 
-///Check, if an given ID is known
+/// Check, if an given ID is known
 bool Dataservice::is_IDknown(int req_ID)
 {
     if(current_map.contains(req_ID) == true)
@@ -107,18 +115,17 @@ bool Dataservice::is_IDknown(int req_ID)
 }
 
 
-///Return of an ID and storing that ID as current ID
+/// Return of an ID and storing that ID as current ID
 int Dataservice::get_ID_clickedName_byModelIndex(int index)
 {
     QList< int > currList = current_map.keys();
     curr_id = currList[index];
     return curr_id;
-    qDebug("return");
 
 }
 
 
-///Creates a string list of the values of the this->map
+/// Creates a string list of the values of the this->map
 QStringList Dataservice::get_strList_allValues()
 {
         QStringList list = current_map.values();
@@ -126,14 +133,11 @@ QStringList Dataservice::get_strList_allValues()
 }
 
 
-///Return of map
+/// Return of map
 QMap<int, QString > Dataservice::get_map()
 {
     return current_map;
 }
-
-
-///**********************************************private methods
 
 
 ///private: Determining of an new ID
@@ -162,6 +166,20 @@ void Dataservice::add_data2file()
     Fileowner saveRequest;
     saveRequest.set_Data(curr_DB, make_strList_for_add_data2file());
 
+    if(remove_warning == true)
+    {
+        Manager_Dataservice erase_req;
+        erase_req.set_editMode("erase");
+
+        for(int j = 0; j< remove_container.size() ; j++)
+        {
+            erase_req.do_edit_with(remove_container[j]);
+        }
+
+        erase_req.save();
+
+     }
+
 }
 
 
@@ -180,24 +198,3 @@ QStringList Dataservice::make_strList_for_add_data2file()
     return keysAndVals_List;
 
 }
-
-
-///******************************************************************needed???
-
-///
-
-///Exclusive service for manager_data_admin
-QList<int> Dataservice::get_values_by_key()
-{
-    //return current_mmap.values(curr_id);
-
-}
-
-
-QList <int> Dataservice::get_key_list()
-{
-    //return current_map.keys();
-}
-
-
-

@@ -1,3 +1,7 @@
+/**
+  * Setup of the widgets
+  */
+
 #include "mainmenu.h"
 #include "ui_mainmenu.h"
 #include "studentseditor.h"

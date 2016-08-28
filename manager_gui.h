@@ -20,6 +20,8 @@ public:
 private slots:
     void on_listWidget_list_itemClicked(QListWidgetItem *item);
 
+    void on_listWidget_inv_list_itemClicked(QListWidgetItem *item);
+
     void on_pushButton_students_clicked();
 
     void on_pushButton_classes_clicked();
@@ -30,18 +32,17 @@ private slots:
 
     void on_pushButton_add_to_clicked();
 
-    void on_lineEdit_enterID_cursorPositionChanged(int arg1, int arg2);
-
-
-    void on_listWidget_inv_list_itemClicked(QListWidgetItem *item);
+    void on_pushButton_exit_clicked();
 
     void on_pushButton_enter_inv_clicked();
 
     void on_pushButton_remove_clicked();
 
+    void on_lineEdit_enterID_cursorPositionChanged(int arg1, int arg2);
+
     void on_lineEdit_enterID_inv_cursorPositionChanged(int arg1, int arg2);
 
-    void on_pushButton_exit_clicked();
+    void clear_editor();
 
 private:
     Ui::Manager_GUI *ui;
@@ -57,6 +58,10 @@ private:
     int mode;
 
     void view_status(int);
+
+    int curr_curspos_ent1;
+    int curr_curspos_ent2;
+
 
 };
 

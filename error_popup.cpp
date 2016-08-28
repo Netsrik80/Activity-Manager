@@ -1,3 +1,7 @@
+/**
+  * Dialog for messages for the user (not only errors)
+  */
+
 #include "error_popup.h"
 #include "ui_error_popup.h"
 

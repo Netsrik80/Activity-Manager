@@ -32,9 +32,13 @@ private slots:
 
 private:
     Ui::ActivityEditor *ui;
+
     void setupQListView();
+
     QStringListModel thisModel;
+
     Dataservice dataRequest; ///only access to data
+
 };
 
 #endif // ACTIVITYEDITOR_H

@@ -1,4 +1,6 @@
-///object with two values (int & QString)
+/**
+  * Objecttype
+  */
 
 #include "twoitemobject.h"
 
@@ -14,14 +16,14 @@ TwoItemObject::TwoItemObject(int aNumber, QString aWord)
 {
     set_id(aNumber);
     set_name(aWord);
-    set_id2(0);///needed?
+    set_id2(0);
 }
 
 TwoItemObject::TwoItemObject(int studID, int actID)
 {
     set_id(studID);
     set_id2(actID);
-    set_name("");///needed?
+    set_name("");
 }
 
 void TwoItemObject::set_id(int number)

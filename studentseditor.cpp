@@ -1,3 +1,7 @@
+/**
+  * Editing data (add, remove, change) of one file
+  */
+
 #include "studentseditor.h"
 #include "ui_studentseditor.h"
 #include "dataservice.h"

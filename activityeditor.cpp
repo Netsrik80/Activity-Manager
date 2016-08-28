@@ -1,3 +1,7 @@
+/**
+  * Editing data (add, remove, change) of one file
+  */
+
 #include "activityeditor.h"
 #include "ui_activityeditor.h"
 #include "dataservice.h"
@@ -23,7 +27,6 @@ void ActivityEditor::setupQListView()
 {
     thisModel.setStringList(dataRequest.get_strList_allValues());
     ui->QListView_allMembers->setModel(&thisModel);
-    qDebug("setupListView");
 
 }
 

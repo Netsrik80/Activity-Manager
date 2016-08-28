@@ -1,3 +1,8 @@
+/**
+  * Handles the requests to files data
+  * (only access to files)
+  */
+
 #include "fileowner.h"
 #include <QString>
 #include <QFile>
@@ -21,7 +26,7 @@ Fileowner::Fileowner()
 ///Writes data (a QStringList) to the file
 void Fileowner::writeToFile(QString reqFile, QStringList list)
 {
-    ///open file
+    //open file
     QString filename (reqFile);
     QFile myfile(filename);
     myfile.open(QIODevice::WriteOnly | QIODevice::Text);
@@ -33,7 +38,7 @@ void Fileowner::writeToFile(QString reqFile, QStringList list)
         out<< list[i]<<endl;
     }
 
-    ///close file
+    //close file
     myfile.flush();
     myfile.close();
 }
@@ -41,7 +46,7 @@ void Fileowner::writeToFile(QString reqFile, QStringList list)
 ///Reads the data from the file and creates a QVector that contains objects with two values
 void Fileowner::readFromFile(QString reqFile)
 {
-    ///open file
+    //open file
     QString filename (reqFile);
     QFile myfile(filename);
     myfile.open(QIODevice::ReadWrite | QIODevice::Text);
@@ -51,7 +56,7 @@ void Fileowner::readFromFile(QString reqFile)
 
     if(reqFile == combinationsDB)
     {
-        ///setup QVector (int, int) from file
+        //setup QVector (int, int) from file
         do{
             inLine = inStream.readLine();
             if(!inLine.isNull())
@@ -69,7 +74,7 @@ void Fileowner::readFromFile(QString reqFile)
 
     else
     {
-        ///setup QVector (int, string) from file
+        //setup QVector (int, string) from file
         do{
             inLine = inStream.readLine();
             if(!inLine.isNull())
@@ -86,7 +91,7 @@ void Fileowner::readFromFile(QString reqFile)
         }while(!inLine.isNull());
     }
 
-    ///close file
+    //close file
     myfile.flush();
     myfile.close();
 }
