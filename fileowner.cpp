@@ -28,7 +28,7 @@ Fileowner::Fileowner()
 
 
 ///Writes data (a QStringList) to the file
-void Fileowner::writeToFile(QString reqFile, QStringList list)
+bool Fileowner::writeToFile(QString reqFile, QStringList list)
 {
     //open file
     QString filename (reqFile);
@@ -45,6 +45,8 @@ void Fileowner::writeToFile(QString reqFile, QStringList list)
     //close file
     myfile.flush();
     myfile.close();
+
+    return true;
 }
 
 
@@ -110,7 +112,8 @@ void Fileowner::get_Data(QString file)
 
 
 ///Public function to send data to a file
-void Fileowner::set_Data(QString file, QStringList list)
+bool Fileowner::set_Data(QString file, QStringList list)
 {
     writeToFile(file, list);
+    return true;
 }

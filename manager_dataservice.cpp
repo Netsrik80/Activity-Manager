@@ -19,7 +19,7 @@ Manager_Dataservice::Manager_Dataservice()
 
 }
 
-/**
+/*
              ****************
              *              *
              *     init     *
@@ -65,7 +65,7 @@ void Manager_Dataservice::init_man()
 }
 
 
-/**
+/*
              ****************
              *  private map *
              *  management  *
@@ -167,7 +167,7 @@ void Manager_Dataservice::switch_active_mmap()
 
 
 
-/**
+/*
              ****************
              *    public    *
              *    get/set   *
@@ -412,5 +412,25 @@ void Manager_Dataservice::save()
 
 }
 
+/// Erase request from dataservice
+void Manager_Dataservice::erase(int id)
+{
+    if(id >= 1000)
+    {
+        combi_studkey_mmap.remove(id);
+    }
 
+    if(id < 1000)
+    {
+        QMultiMap<int, int>::Iterator it = combi_studkey_mmap.begin();
+
+        while(it != combi_studkey_mmap.end())
+        {
+            combi_studkey_mmap.remove(it.key(), id);
+            it++;
+        }
+
+        save();
+    }
+}
 

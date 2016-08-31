@@ -49,7 +49,6 @@ bool Entity::set_candidates(QMap< int, QString > other_map)
     }
 
     candidates = allPossibilities;
-    QVariant o = allPossibilities.size() ; qDebug()<< o.toString();
 
     return true;
 }
@@ -136,7 +135,7 @@ QMultiMap< int, int > Entity::send_your_associates_to(QMultiMap< int, int > home
 {
     for(int i = 0; i < associates.size(); i++)
     {
-        if(!home_multiMap.contains(id, associates[i]))
+        if(!home_multiMap.contains(id, associates[i]) && id != 0)
 
         {
             home_multiMap.insertMulti(id, associates[i]);

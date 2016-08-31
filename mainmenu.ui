@@ -143,7 +143,23 @@
         </font>
        </property>
        <property name="text">
-        <string>For testing you have to enter some data by click on &quot;edit list...&quot;. (data stored in build)</string>
+        <string>For testing enter some data by click on the &quot;edit list&quot;-buttons (data stored in build)</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="testAusgabe_2">
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>or use the data in the supplied build.</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>

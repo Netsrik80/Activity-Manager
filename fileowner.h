@@ -13,7 +13,7 @@ class Fileowner
 private:
     void setDatabase();
 
-    void writeToFile(QString, QStringList);
+    bool writeToFile(QString, QStringList);
 
     void readFromFile(QString);
 
@@ -30,7 +30,7 @@ public:
 
     void get_Data(QString);
 
-    void set_Data(QString, QStringList);
+    bool set_Data(QString, QStringList);
 
 };
 

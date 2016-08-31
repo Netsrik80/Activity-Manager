@@ -169,7 +169,10 @@ void Dataservice::add_data2file()
     if(remove_warning == true)
     {
         Manager_Dataservice update;
-        update.save();
+        for(int i = 0; i < remove_container.size(); i++)
+        {
+            update.erase(remove_container[i]);
+        }
 
     }
 

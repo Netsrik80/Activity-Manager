@@ -54,6 +54,8 @@ public:
 
     bool leave_clicked();
 
+    void erase(int);
+
     void save();
 
 };
