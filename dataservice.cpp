@@ -25,7 +25,7 @@ void Dataservice::init(QString entType)
     {
         current_map.clear();
         curr_DB = req2fileOwner.studentsDB;
-        start_ID = 1000; //if this value would be changed, this may causes problems (-> Manager_Dataservice::check_ID())
+        start_ID = 1000; //if this value would be changed, this (may) causes problems!!!
         req2fileOwner.get_Data(curr_DB);
         for(int i = 0; i < req2fileOwner.vec_from_filedata.size(); i++)
         {
@@ -37,7 +37,7 @@ void Dataservice::init(QString entType)
     {
         current_map.clear();
         curr_DB = req2fileOwner.activitiesDB;
-        start_ID = 100; //if this value would be changed, this may causes problems (-> Manager_Dataservice::check_ID())
+        start_ID = 100; //if this value would be changed, this (may) causes problems!!!
         req2fileOwner.get_Data(req2fileOwner.activitiesDB);
         for(int i = 0; i < req2fileOwner.vec_from_filedata.size(); i++)
         {
@@ -83,12 +83,12 @@ bool Dataservice::edit_data(QString name2change)
 {
     if((!get_strList_allValues().contains(name2change)) && (!name2change.isEmpty()))
     {
-             current_map.insert(curr_id, name2change);
-             return true;
+        current_map.insert(curr_id, name2change);
+        return true;
     }
     else{
-             return false;
-        }
+        return false;
+    }
 
 }
 
@@ -106,10 +106,10 @@ bool Dataservice::is_IDknown(int req_ID)
 {
     if(current_map.contains(req_ID) == true)
     {
-            return true;
+        return true;
     }
     else{
-          return false;
+        return false;
     }
 
 }
@@ -128,8 +128,8 @@ int Dataservice::get_ID_clickedName_byModelIndex(int index)
 /// Creates a string list of the values of the this->map
 QStringList Dataservice::get_strList_allValues()
 {
-        QStringList list = current_map.values();
-        return list;
+    QStringList list = current_map.values();
+    return list;
 }
 
 
@@ -178,7 +178,7 @@ void Dataservice::add_data2file()
 
         erase_req.save();
 
-     }
+    }
 
 }
 

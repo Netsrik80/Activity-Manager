@@ -26,42 +26,32 @@ private slots:
 
     void on_pushButton_classes_clicked();
 
-    void on_pushButton_save_clicked();
+    void on_pushButton_show_addable_clicked();
 
-    void on_pushButton_enter_clicked();
+    void on_pushButton_show_removable_clicked();
 
-    void on_pushButton_add_to_clicked();
+    void on_pushButton_setKEY_clicked();
+
+    void on_pushButton_setVAL_clicked();
+
+    void on_pushButton_confirmADD_clicked();
+
+    void on_pushButton_confirmREM_clicked();
 
     void on_pushButton_exit_clicked();
 
-    void on_pushButton_enter_inv_clicked();
-
-    void on_pushButton_remove_clicked();
-
-    void on_lineEdit_enterID_cursorPositionChanged(int, int);
-
-    void on_lineEdit_enterID_inv_cursorPositionChanged(int, int);
-
-    void clear_editor();
+    void on_pushButton_save_clicked();
 
 private:
     Ui::Manager_GUI *ui;
 
-    ///Setup of the dataservice for the session
-    Manager_Dataservice m_datatservice;
+    Manager_Dataservice m_datatservice; ///Setup of the dataservice for the session
 
     void setup_leftListWidget();
 
     void setup_rightListWidget();
 
-    ///1=students, 2=activities
-    int mode;
-
-    void view_status(int);
-
-    int curr_curspos_ent1;
-    int curr_curspos_ent2;
-
+    int mode;  ///1=students, 2=activities
 
 };
 

@@ -11,6 +11,7 @@
 #include <QListWidget>
 #include <QListWidgetItem>
 #include "error_popup.h"
+#include <QDebug>
 
 
 Manager_GUI::Manager_GUI(QWidget *parent) :
@@ -19,8 +20,8 @@ Manager_GUI::Manager_GUI(QWidget *parent) :
 {
     ui->setupUi(this);
     on_pushButton_students_clicked();
-    m_datatservice.set_editMode("remove");
-    ui->pushButton_remove->setDisabled(1);
+    ui->pushButton_students->setChecked(1);
+
 }
 
 
@@ -41,11 +42,13 @@ Manager_GUI::~Manager_GUI()
 ///Button: Students
 void Manager_GUI::on_pushButton_students_clicked()
 {
-    ui->pushButton_students->setDisabled(1);
-    ui->pushButton_classes->setDisabled(0);
+    ui->pushButton_classes->setChecked(0);
+    ui->lineEdit_KEY->clear();
+    ui->listWidget_inv_list->clear();
+    ui->lineEdit_enterID_inv->clear();
 
     mode = 1;
-    m_datatservice.set_guiMode("students"); //other mode = "activities"
+
     setup_leftListWidget();
 
 }
@@ -54,107 +57,203 @@ void Manager_GUI::on_pushButton_students_clicked()
 ///Button: Classes
 void Manager_GUI::on_pushButton_classes_clicked()
 {
-    ui->pushButton_students->setDisabled(0);
-    ui->pushButton_classes->setDisabled(1);
+    ui->pushButton_students->setChecked(0);
+    ui->lineEdit_KEY->clear();
+    ui->listWidget_inv_list->clear();
+    ui->lineEdit_enterID_inv->clear();
 
     mode = 2;
-    m_datatservice.set_guiMode("activities"); //other mode = "students"
+
     setup_leftListWidget();
 
 }
 
 
-///Button: Enter
-void Manager_GUI::on_pushButton_enter_clicked()
+/// Enter first ID (key)
+void Manager_GUI::on_pushButton_setKEY_clicked()
 {
-    QVariant req_ID = ui->lineEdit_enterID->text();
-    if( (( (req_ID.toInt() >= 1000 && mode == 1) || (req_ID.toInt() < 1000 && mode == 2) )
-         && (m_datatservice.check_ID(req_ID.toInt()) == true) ))
+    QVariant key = ui->lineEdit_KEY->text();
+
+    if(m_datatservice.send_ID_toEdit(key.toInt()) == false)
     {
-
-        ///sends the id (student/activity) and sets the corresponding combi-list (mmap) to active
-        m_datatservice.send_ID_toEdit(req_ID.toInt());
-
-        ui->lineEdit_search->setText(m_datatservice.get_Name_byID(req_ID.toInt()));
-        setup_rightListWidget();
-
+            Error_popup error;
+            error.set_text("ID unknown!");
+            error.exec();
     }
-    else{
-        Error_popup error;
-        error.set_text("ID unknown");
-        error.exec();
+
+    else
+    {
+        QVariant fresh_key = m_datatservice.get_currentKey();
+        ui->lineEdit_currentKEY->setText(fresh_key.toString());
+        ui->lineEdit_KEY->clear();
+        ui->listWidget_list->setCurrentRow(-1);
     }
 
 }
 
 
-///Add Button
-void Manager_GUI::on_pushButton_add_to_clicked()
+
+
+/// Available to add Button
+void Manager_GUI::on_pushButton_show_addable_clicked()
 {
-    if(ui->lineEdit_enterID->text() == 0)
+    ui->pushButton_show_removable->setChecked(0);
+    ui->pushButton_confirmADD->setChecked(0);
+    ui->pushButton_confirmREM->setChecked(0);
+
+    if(ui->lineEdit_currentKEY->text() == 0)
     {
         Error_popup err;
-        err.set_text("Information incomplete!");
+        err.set_text("Input of first ID is missing!");
         err.exec();
     }
+
     else{
-        ui->pushButton_add_to->setDisabled(1);
-        ui->pushButton_remove->setDisabled(0);
+        ui->lineEdit_KEY->clear();
 
-        ui->listWidget_inv_list->clear();
-        m_datatservice.set_editMode("add"); // other mode = "remove"
-        ui->pushButton_enter_inv->setText("add to");
-
+        m_datatservice.set_editMode("add");
         setup_rightListWidget();
+
         }
 
 }
 
 
-/// Remove Button
-void Manager_GUI::on_pushButton_remove_clicked()
+/// Available to remove Button
+void Manager_GUI::on_pushButton_show_removable_clicked()
 {
+    ui->pushButton_show_addable->setChecked(0);
+    ui->pushButton_confirmADD->setChecked(0);
+    ui->pushButton_confirmREM->setChecked(0);
 
-    ui->pushButton_add_to->setDisabled(0);
-    ui->pushButton_remove->setDisabled(1);
-
-    ui->listWidget_inv_list->clear();
-    m_datatservice.set_editMode("remove"); // other mode = "add"
-    ui->pushButton_enter_inv->setText("remove from");
-
-    setup_rightListWidget();
-
-
-}
-
-
-///Edit Button
-void Manager_GUI::on_pushButton_enter_inv_clicked()
-{
-    QVariant req_ID = ui->lineEdit_enterID_inv->text();
-
-    if(m_datatservice.check_ID(req_ID.toInt()) == true && (ui->lineEdit_enterID != 0))
-
+    if(ui->lineEdit_currentKEY->text() == 0)
     {
-        m_datatservice.do_edit_with(req_ID.toInt());
-
-        ui->lineEdit_enterID_inv->clear();
-        ui->lineEdit_search_inv->clear();
-
-        Error_popup message;
-        message.set_text("Changes are cached. Continue or save.");
-        message.exec();
+        Error_popup err;
+        err.set_text("Input of first ID is missing!");
+        err.exec();
     }
 
     else{
+        ui->lineEdit_KEY->clear();
+
+        m_datatservice.set_editMode("remove");
+        setup_rightListWidget();
+
+        }
+
+}
+
+
+/// Set edit mode to add
+void Manager_GUI::on_pushButton_confirmADD_clicked()
+{
+    ui->pushButton_confirmREM->setChecked(0);
+    ui->pushButton_setVAL->setDisabled(1);
+    m_datatservice.set_editMode("add");
+
+    Error_popup mess;
+
+    QVariant input = ui->lineEdit_currentVAL->text();
+    if(m_datatservice.send_ID_editWith(input.toInt()) == true)
+    {
+        if(m_datatservice.do_edit_with(input.toInt()) == true)
+        {
+            setup_rightListWidget();
+            ui->lineEdit_currentVAL->clear();
+
+            mess.set_text("Modification cached!");
+            mess.exec();
+        }
+        else
+        {
+            Error_popup err;
+            err.set_text("ID is not available to add.");
+            err.exec();
+        }
+    }
+    else
+    {
+        mess.set_text("Modification not possible. Check input.");
+        mess.exec();
+    }
+
+        ui->pushButton_setVAL->setDisabled(0);
+
+}
+
+
+/// Set edit mode to remove
+void Manager_GUI::on_pushButton_confirmREM_clicked()
+{
+    ui->pushButton_confirmADD->setChecked(0);
+    ui->pushButton_setVAL->setDisabled(1);
+    m_datatservice.set_editMode("remove");
+
+    Error_popup mess;
+
+    QVariant input = ui->lineEdit_currentVAL->text();
+    if(m_datatservice.send_ID_editWith(input.toInt()) == true)
+    {
+        if(m_datatservice.do_edit_with(input.toInt()) == true)
+        {
+            setup_rightListWidget();
+            ui->lineEdit_currentVAL->clear();
+
+            mess.set_text("Modification cached!");
+            mess.exec();
+        }
+        else
+        {
+            Error_popup err;
+            err.set_text("ID is not available to remove.");
+            err.exec();
+        }
+    }
+    else
+    {
+        mess.set_text("Modification not possible. Check input.");
+        mess.exec();
+    }
+
+        ui->pushButton_setVAL->setDisabled(0);
+
+
+}
+
+
+/// Enter second ID (val)
+void Manager_GUI::on_pushButton_setVAL_clicked()
+{
+    QVariant val = ui->lineEdit_enterID_inv->text();
+    QVariant key = ui->lineEdit_currentKEY->text();
+
+    if( (key.toInt() >= 1000 && val.toInt() < 1000)
+            || (key.toInt() < 1000 && val.toInt() > 1000) )
+    {
+        if(m_datatservice.check_ID(val.toInt()) == false)
+        {
+            Error_popup error;
+            error.set_text("ID is not available!");
+            error.exec();
+        }
+        else
+        {
+            ui->lineEdit_currentVAL->setText(val.toString());
+            ui->lineEdit_enterID_inv->clear();
+        }
+
+    }
+    else
+    {
         Error_popup error;
-        error.set_text("Information inclompete!");
+        error.set_text("Combination is not possible!");
         error.exec();
     }
 
-     setup_rightListWidget();
-
+    //ui->pushButton_setVAL->setDisabled(1);
 }
+
+
 
 /// Save button
 void Manager_GUI::on_pushButton_save_clicked()
@@ -164,12 +263,15 @@ void Manager_GUI::on_pushButton_save_clicked()
 
 }
 
+
 /// Exit button
 void Manager_GUI::on_pushButton_exit_clicked()
 {
     this->close();
 
 }
+
+
 
 /**
              ****************
@@ -188,17 +290,18 @@ void Manager_GUI::setup_leftListWidget()
     case 1:
         ui->listWidget_list->clear();
         ui->listWidget_list->addItems(m_datatservice.get_all_names(mode));
-        ui->label->setText("Name: ");
+
         break;
 
     case 2:
         ui->listWidget_list->clear();
         ui->listWidget_list->addItems(m_datatservice.get_all_names(mode));
-        ui->label->setText("Activity: ");
+
         break;
 
     default:
         ui->listWidget_list->addItem("no list available");
+
         break;
     }
 
@@ -208,83 +311,53 @@ void Manager_GUI::setup_leftListWidget()
 ///Left ListWidget (action)
 void Manager_GUI::on_listWidget_list_itemClicked(QListWidgetItem *item)
 {
+    ui->listWidget_inv_list->clear();
+    ui->pushButton_show_addable->setChecked(0);
+    ui->pushButton_show_removable->setChecked(0);
+
     QString clicked_name = item->text();
-    QVariant id = m_datatservice.get_ID_byName("leftWidget", clicked_name); // other option = "rightWidget"
-    ui->lineEdit_enterID->setText(id.toString());
-    ui->lineEdit_search->setText(item->text());
+    int val = m_datatservice.get_ID_byName(clicked_name);
 
-    m_datatservice.send_ID_toEdit(id.toInt());
+    if(val == 0 || m_datatservice.send_ID_toEdit(val) == false)
+    {
+        Error_popup error;
+        error.set_text("ID unknown");
+        error.exec();
+    }
 
-
-    clear_editor();
-    on_pushButton_remove_clicked();
-
+    else
+    {
+    QVariant fresh_val = m_datatservice.get_currentKey();
+    ui->lineEdit_currentKEY->setText(fresh_val.toString());
+    }
 
 }
 
 
-///Right ListWidget
+/// Right ListWidget (setup)
 void Manager_GUI::setup_rightListWidget()
 {
     ui->listWidget_inv_list->clear();
     ui->listWidget_inv_list->addItems(m_datatservice.get_available_items());
 
-    ui->lineEdit_enterID_inv->setDisabled(0);
-    ui->pushButton_enter_inv->setDisabled(0);
-
 }
 
 
-///Right ListWidget (action)
+/// Right ListWidget (action)
 void Manager_GUI::on_listWidget_inv_list_itemClicked(QListWidgetItem *item)
 {
     QString clicked_name = item->text();
 
-    QVariant id = m_datatservice.get_ID_byName("rightWidget", clicked_name); // other option = "leftWidget"
-    ui->lineEdit_search_inv->setText(clicked_name);
-    ui->lineEdit_enterID_inv->setText(id.toString());
+    if(!clicked_name.isNull() && clicked_name != "No entry at the moment.")
+    {
+        QVariant val = m_datatservice.get_ID_byName(clicked_name);
+        ui->lineEdit_currentVAL->setText(val.toString());
+    }
+    else
+        {
+            Error_popup err;
+            err.set_text("ID is incorrect!");
+            err.exec();
+        }
 
 }
-
-
-/**
-             ****************
-             *              *
-             *    input     *
-             *              *
-             * **************
-*/
-
-
-/// Left id-input-field (action)
-void Manager_GUI::on_lineEdit_enterID_cursorPositionChanged(int arg1, int arg2)
-{
-    arg1 = curr_curspos_ent1;
-    ui->listWidget_list->setCurrentRow(-1);
-    arg2 = ui->lineEdit_enterID->cursorPosition();
-    curr_curspos_ent1 = arg2;
-    clear_editor();
-    ui->lineEdit_search->clear();
-}
-
-
-/// Right id-input-field (action)
-void Manager_GUI::on_lineEdit_enterID_inv_cursorPositionChanged(int arg1, int arg2)
-{
-    arg1 = curr_curspos_ent2;
-    ui->listWidget_inv_list->setCurrentRow(-1);
-    arg2 = ui->lineEdit_enterID_inv->cursorPosition();
-    curr_curspos_ent2 = arg2;
-
-}
-
-
-/// Removing of all entrys in the editor
-void Manager_GUI::clear_editor()
-{
-    ui->lineEdit_enterID_inv->clear();
-    ui->lineEdit_search_inv->clear();
-    ui->listWidget_inv_list->clear();
-
-}
-

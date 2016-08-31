@@ -12,13 +12,16 @@ class Fileowner
 
 private:
     void writeToFile(QString, QStringList);
+
     void readFromFile(QString);
+
     void setDatabase();
 
 public:
     Fileowner();
 
     void get_Data(QString);
+
     void set_Data(QString, QStringList);
 
     QVector<TwoItemObject>vec_from_filedata;

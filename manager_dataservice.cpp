@@ -8,7 +8,7 @@
 #include <QStringList>
 #include <QVariant>
 #include <iterator>
-
+#include <QDebug>
 
 using namespace std;
 
@@ -28,7 +28,6 @@ Manager_Dataservice::Manager_Dataservice()
 
 ///Setup of QMultiMaps with student-IDs or activity-IDs as keys
 void Manager_Dataservice::init_man()
-
 {
     Fileowner req2fileOwner;
 
@@ -60,13 +59,9 @@ void Manager_Dataservice::init_man()
         }
     }
 
-    // Setup all member variables to initial values (studentsmode, no valid IDs set)
-    active_guiMode = 1;     // initial value = students
-    active_editMode = 211;  // initial value = remove
+    // Setup of variables
     active_KEY_forEdit = 0;
     active_VAL_forEdit = 0;
-    set_map_toActive(1);
-    set_mmap_toActive();
 
 }
 
@@ -75,28 +70,178 @@ void Manager_Dataservice::init_man()
 void Manager_Dataservice::set_active_KEY(int id_from_gui)
 {
     active_KEY_forEdit = id_from_gui;
+    QVariant curr_k = id_from_gui;
 
+}
+
+void Manager_Dataservice::set_active_VAL(int id_from_gui)
+{
+    active_VAL_forEdit = id_from_gui;
 }
 
 /// Setting edit-mode [pub]
 void Manager_Dataservice::set_editMode(QString editMode)
 {
-    if(editMode == "add") { active_editMode = 112; }
+    if(editMode == "add") { qDebug ("add mode"); active_editMode = 112; }
 
-    if(editMode == "remove") { active_editMode = 211; }
+    if(editMode == "remove") { qDebug ("remove mode"); active_editMode = 211; }
 
     if(editMode == "erase") { active_editMode = 111;}
 
 }
 
-/// Setting gui-mode [pub]
-void Manager_Dataservice::set_guiMode(QString guiMode)
-{
-    if(guiMode == "students") { active_guiMode = 1; }
 
-    if(guiMode == "activities") { active_guiMode = 2; }
+/// Setting of the KEY for edit [pub]
+bool Manager_Dataservice::send_ID_toEdit(int id_from_gui)
+{  
+    if(check_ID(id_from_gui) == false) { return false; }
+
+    set_active_KEY(id_from_gui);
+
+    return true;
 
 }
+
+/// Setting of the VAL to edit [pub]
+bool Manager_Dataservice::send_ID_editWith(int id_from_gui)
+{
+    if(check_ID(id_from_gui) == false) {return false; }
+
+    if(id_from_gui >= 1000)
+    {
+        if(active_KEY_forEdit >= 1000) { return false; }
+        set_map_toActive(3);
+
+    }
+
+    if(id_from_gui < 1000)
+    {
+        if(active_KEY_forEdit < 1000) { return false; }
+        set_map_toActive(4);
+
+    }
+
+
+    switch (active_editMode) {
+
+    case 112:{
+        if(active_mmap.contains(id_from_gui, active_KEY_forEdit) == true) { return false; }
+    }break;
+
+    case 211:{
+        if(active_mmap.contains(id_from_gui, active_KEY_forEdit) == false) { return false; }
+    }break;
+
+    default:{
+        return false;
+    }break;
+    }
+
+
+    set_active_VAL(id_from_gui);
+
+    return true;
+
+}
+
+
+/// Addition or removing of an ID from multi-maps [pub]
+bool Manager_Dataservice::do_edit_with(int val)
+{
+
+    // Setup of maps
+    if(active_KEY_forEdit >= 1000)  { set_map_toActive(3); }
+    if(active_KEY_forEdit < 1000)   { set_map_toActive(4); }
+
+    switch (active_editMode)
+    {
+
+    //add
+    case 112:
+    {
+        if(!active_mmap.contains(active_KEY_forEdit, active_VAL_forEdit))
+        {
+
+            active_mmap.insertMulti(active_KEY_forEdit, active_VAL_forEdit);
+            copy_activeMap();
+            switch_active_mmap();
+
+            active_mmap.insertMulti(active_VAL_forEdit, active_KEY_forEdit);
+            copy_activeMap();
+            switch_active_mmap();
+
+            return true;
+        }
+    }break;
+
+    //remove
+    case 211:
+    {
+        if(active_mmap.contains(active_KEY_forEdit, active_VAL_forEdit))
+        {
+            active_mmap.remove(active_KEY_forEdit, active_VAL_forEdit);
+            copy_activeMap();
+
+            switch_active_mmap();
+            active_mmap.remove(active_VAL_forEdit, active_KEY_forEdit);
+            copy_activeMap();
+            switch_active_mmap();
+
+            return true;
+        }
+    }break;
+
+    //erase
+    case 111:
+    {
+
+        active_mmap.remove(active_VAL_forEdit);
+
+        QMultiMap<int,int>::Iterator it = active_mmap.begin();
+        while(it != active_mmap.end())
+        {
+            active_mmap.remove(it.key(), active_VAL_forEdit);
+            it++;
+        }
+
+        copy_activeMap();
+
+        return true;
+    }
+        break;
+
+    default:{
+        qDebug("error: do edit");
+        return false;
+    }break;
+
+    }
+    return false;
+
+}
+
+/// Save data to file [pub]
+void Manager_Dataservice::save()
+{
+    QMultiMap<int, int>::Iterator it = combi_studkey_mmap.begin();
+
+    QVariant firstVal;
+    QVariant secondVal;
+    QStringList printList;
+
+    while(it != combi_studkey_mmap.end())
+    {
+        firstVal = it.key();
+        secondVal = it.value();
+        printList.append(firstVal.toString() + "," + secondVal.toString());
+        it++;
+    }
+
+    Fileowner saveReq;
+    saveReq.set_Data("combinationslist.csv", printList);
+
+}
+
 
 
 /**
@@ -113,18 +258,22 @@ void Manager_Dataservice::set_map_toActive(int map_number)
     switch (map_number) {
 
     case 1:
+        active_map.clear();
         active_map = studs_map;
         break;
 
     case 2:
+        active_map.clear();
         active_map = acts_map;
         break;
 
     case 3:
+        active_mmap.clear();
         active_mmap = combi_studkey_mmap;
         break;
     case 4:
-        active_mmap = combi_actkey_mmap;    
+        active_mmap.clear();
+        active_mmap = combi_actkey_mmap;
         break;
 
     default:
@@ -133,6 +282,7 @@ void Manager_Dataservice::set_map_toActive(int map_number)
     }
 
     active_map_number = map_number;
+
 }
 
 
@@ -146,7 +296,7 @@ void Manager_Dataservice::copy_activeMap()
 
         break;
     case 2:
-         acts_map = active_map;
+        acts_map = active_map;
 
         break;
     case 3:
@@ -165,22 +315,6 @@ void Manager_Dataservice::copy_activeMap()
 }
 
 
-/// Same as set_active map, but corresponding to current active gui mode
-void Manager_Dataservice::set_mmap_toActive()
-{
-    int mmapNmbr = 4;
-
-    if(active_guiMode == 1)
-    {
-        mmapNmbr = 3;
-    }
-
-    set_map_toActive(mmapNmbr);
-
-}
-
-
-
 ///set that map to active, that is not the choosen one in gui
 void Manager_Dataservice::switch_active_map()
 {
@@ -189,8 +323,7 @@ void Manager_Dataservice::switch_active_map()
         set_map_toActive(2);
 
     }
-    else
-    {
+    else{
         set_map_toActive(1);
 
     }
@@ -232,64 +365,64 @@ QMultiMap<int, int> Manager_Dataservice::get_mmap()
 /// Return of all available items (for right listView) [pub]
 QStringList Manager_Dataservice::get_available_items()
 {
-    //Setup of needed maps and variables
-        // active map
-        if(active_guiMode == 1) { set_map_toActive(2); set_map_toActive(3); }
-        // active mulit-map
-        if(active_guiMode == 2) { set_map_toActive(1); set_map_toActive(4); }
-        QStringList strList;
+    //Setup of needed maps
+    if(active_KEY_forEdit >= 1000) { set_map_toActive(2); set_map_toActive(3); }
+    if(active_KEY_forEdit < 1000)  { set_map_toActive(1); set_map_toActive(4); }
 
+    QStringList strList;
 
     switch (active_editMode) {
 
-        //add-request
-        case 112:
+
+    //add-request
+    case 112:
         {
-                if(active_mmap.contains(active_KEY_forEdit))
-                {
-                    QList< int > keys_valList = active_mmap.values(active_KEY_forEdit);
-                    QList< int > available_vals = active_map.keys();
-
-                    // Remove known students or activities
-                    for(int i = 0; i < keys_valList.size(); i++)
-                    {
-                        available_vals.removeOne(keys_valList[i]);
-                    }
-
-                    // Create a String-list from adjusted list
-                    for(int i = 0; i < available_vals.size(); i++)
-                    {
-                        strList.append(active_map.value(available_vals[i]));
-                    }
-                }
-
-                else{
-                        strList = active_map.values();
-                    }
-         }break;
-
-        //remove-request
-        case 211:
+        if(active_mmap.contains(active_KEY_forEdit))
         {
-                if(active_mmap.contains(active_KEY_forEdit))
-                {
-                    QList< int > keys_valList = active_mmap.values(active_KEY_forEdit);
+            QList< int > keys_valList = active_mmap.values(active_KEY_forEdit);
+            QList< int > available_vals = active_map.keys();
 
-                    for(int i = 0; i < keys_valList.size(); i++)
-                    {
-                        strList.append(active_map.value(keys_valList[i]));
-                    }
-                }
-                else{
-                        strList.append("No entry at the moment.");
-                    }
-        }break;
+            // Removing of known students or activities
+            for(int i = 0; i < keys_valList.size(); i++)
+            {
+                available_vals.removeOne(keys_valList[i]);
+            }
 
-        default:
+            // Create a String-list from adjusted list
+            for(int i = 0; i < available_vals.size(); i++)
+            {
+                strList.append(active_map.value(available_vals[i]));
+            }
+        }
+
+        else{
+            strList = active_map.values();
+        }
+    }break;
+
+    //remove-request
+    case 211:
+
+    {
+        if(active_mmap.contains(active_KEY_forEdit))
         {
-                qDebug("error get_available items");
+            QList< int > keys_valList = active_mmap.values(active_KEY_forEdit);
 
-        }break;
+            for(int i = 0; i < keys_valList.size(); i++)
+            {
+                strList.append(active_map.value(keys_valList[i]));
+            }
+        }
+        else{
+            strList.append("No entry.");
+        }
+    }break;
+
+    default:
+    {
+        qDebug("error get_available items");
+
+    }break;
 
     }
 
@@ -309,14 +442,14 @@ QStringList Manager_Dataservice::get_all_names(int mapnmbr)
         QMap < int, QString >::iterator it = active_map.begin();
 
         while(it != active_map.end())
-            {
-                QString str = it.value();
-                str_list.append(str);
-                it++;
-            }
+        {
+            QString str = it.value();
+            str_list.append(str);
+            it++;
+        }
     }
     else{
-            str_list.append("error");
+        str_list.append("error");
     }
 
     return str_list;
@@ -335,10 +468,14 @@ QString Manager_Dataservice::get_Name_byID(int key)
 
 
 /// Returns the ID (int), that belongs to a name (QString) (not multimap)
-int Manager_Dataservice::get_ID_byName(QString whoAsk, QString name)
+int Manager_Dataservice::get_ID_byName(QString name)
 {
-    set_map_toActive(active_guiMode);
-    if(whoAsk == "rightWidget") {switch_active_map();}
+    // Maybe slow
+    if(active_map.key(name) == 0)
+    {
+        switch_active_map();
+        if(active_map.key(name) == 0) {return 99;}
+    }
 
     return active_map.key(name);
 
@@ -348,6 +485,11 @@ int Manager_Dataservice::get_ID_byName(QString whoAsk, QString name)
 /// Check, if an entered ID is known [pub]
 bool Manager_Dataservice::check_ID(int id)
 {
+    if(id == 0)
+    {
+        return false;
+    }
+
     if(id >= 1000 && !studs_map.contains(id))
     {
         return false;
@@ -362,106 +504,15 @@ bool Manager_Dataservice::check_ID(int id)
 }
 
 
-
-/**
-             ****************
-             *              *
-             *     set      *
-             *              *
-             * **************
-*/
-
-/// Setting of the KEY for edit [pub]
-void Manager_Dataservice::send_ID_toEdit(int id_from_gui)
-{ 
-    set_active_KEY(id_from_gui);
-    set_map_toActive(active_guiMode);
-    set_mmap_toActive();
-
+/// Return of variables value
+int Manager_Dataservice::get_currentKey()
+{
+    return active_KEY_forEdit;
 }
 
 
-
-/// Addition or removing of an ID from multi-maps [pub]
-void Manager_Dataservice::do_edit_with(int id_from_gui)
+/// Return of variables value
+int Manager_Dataservice::get_currentVal()
 {
-    // Setup of needed maps
-    if(active_guiMode == 1) { set_map_toActive(3); }
-
-    active_VAL_forEdit = id_from_gui;
-
-
-    switch (active_editMode)
-    {
-
-            //add
-            case 112:
-                    active_mmap.insertMulti(active_KEY_forEdit, active_VAL_forEdit);
-                    copy_activeMap();
-
-                    switch_active_mmap();
-                    active_mmap.insertMulti(active_VAL_forEdit, active_KEY_forEdit);
-                    copy_activeMap();
-                    switch_active_mmap();
-
-
-                break;
-
-            //remove
-            case 211:
-            {
-                    active_mmap.remove(active_KEY_forEdit, active_VAL_forEdit);
-                    copy_activeMap();
-
-                    switch_active_mmap();
-                    active_mmap.remove(active_VAL_forEdit, active_KEY_forEdit);
-                    copy_activeMap();
-                    switch_active_mmap();
-            }break;
-
-
-            //erase
-            case 111:
-            {
-                    active_mmap.remove(active_VAL_forEdit);
-
-                    QMultiMap<int,int>::Iterator it = active_mmap.begin();
-                    while(it != active_mmap.end())
-                    {
-                        active_mmap.remove(it.key(), active_VAL_forEdit);
-                        it++;
-                    }
-
-                    copy_activeMap();
-
-             }break;
-
-            default:
-            {
-                    qDebug("error in do edit");
-
-             }break;
-    }
-}
-
-/// Save data to file [pub]
-void Manager_Dataservice::save()
-{
-    QMultiMap<int, int>::Iterator it = combi_studkey_mmap.begin();
-
-    QVariant firstVal;
-    QVariant secondVal;
-    QStringList printList;
-
-    while(it != combi_studkey_mmap.end())
-    {
-        firstVal = it.key();
-        secondVal = it.value();
-        printList.append(firstVal.toString() + "," + secondVal.toString());
-        it++;
-    }
-
-    Fileowner saveReq;
-    saveReq.set_Data("combinationslist.csv", printList);
-
+    return active_VAL_forEdit;
 }
