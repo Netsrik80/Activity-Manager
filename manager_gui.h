@@ -30,17 +30,21 @@ private slots:
 
     void on_pushButton_show_removable_clicked();
 
-    void on_pushButton_setKEY_clicked();
+    void on_pushButton_enter_clicked();
 
-    void on_pushButton_setVAL_clicked();
+    void on_pushButton_enter2_clicked();
 
-    void on_pushButton_confirmADD_clicked();
+    void on_pushButton_join_clicked();
 
-    void on_pushButton_confirmREM_clicked();
+    void on_pushButton_leave_clicked();
 
     void on_pushButton_exit_clicked();
 
     void on_pushButton_save_clicked();
+
+    void on_lineEdit_KEY_cursorPositionChanged(int arg1, int arg2);
+
+    void on_lineEdit_enterID_inv_cursorPositionChanged(int arg1, int arg2);
 
 private:
     Ui::Manager_GUI *ui;
@@ -49,9 +53,10 @@ private:
 
     void setup_leftListWidget();
 
-    void setup_rightListWidget();
+    void setup_rightListWidget(QString);
 
     int mode;  ///1=students, 2=activities
+
 
 };
 

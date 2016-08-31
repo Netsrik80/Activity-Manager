@@ -168,15 +168,8 @@ void Dataservice::add_data2file()
 
     if(remove_warning == true)
     {
-        Manager_Dataservice erase_req;
-        erase_req.set_editMode("erase");
-
-        for(int j = 0; j< remove_container.size() ; j++)
-        {
-            erase_req.do_edit_with(remove_container[j]);
-        }
-
-        erase_req.save();
+        Manager_Dataservice update;
+        update.save();
 
     }
 

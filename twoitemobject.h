@@ -14,17 +14,22 @@ private:
 public:
     ///constructors
     TwoItemObject();
+
     TwoItemObject(int, QString);
+
     TwoItemObject(int, int);
 
-    ///set methods
-    void set_name(QString);
+    /// get & set
     void set_id(int);
+
+    int get_id();
+
     void set_id2(int);
 
-    ///get methods
-    int get_id();
     int get_id2();
+
+    void set_name(QString);
+
     QString get_name();
 
 };

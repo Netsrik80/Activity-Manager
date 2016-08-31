@@ -11,25 +11,27 @@ class Fileowner
 {
 
 private:
+    void setDatabase();
+
     void writeToFile(QString, QStringList);
 
     void readFromFile(QString);
 
-    void setDatabase();
-
 public:
     Fileowner();
+
+    QVector<TwoItemObject>vec_from_filedata;
+
+    QString studentsDB; // public filename
+
+    QString activitiesDB; // public filename
+
+    QString combinationsDB; // public filename
 
     void get_Data(QString);
 
     void set_Data(QString, QStringList);
 
-    QVector<TwoItemObject>vec_from_filedata;
-
-    ///public names for the files
-    QString studentsDB;
-    QString activitiesDB;
-    QString combinationsDB;
 };
 
 #endif // FILEOWNER_H

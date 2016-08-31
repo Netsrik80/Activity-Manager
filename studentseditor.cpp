@@ -50,13 +50,13 @@ void StudentsEditor::on_button_add_clicked()
             Error_popup err;
             err.set_text("Entry missing! Please enter a text.");
             err.exec();
-            }
+        }
     }
     else{
-            Error_popup err;
-            err.set_text("This entry already exists. Change entry.");
-            err.exec();
-            }
+        Error_popup err;
+        err.set_text("This entry already exists. Change entry.");
+        err.exec();
+    }
 
     setupQListView();
 
@@ -67,25 +67,25 @@ void StudentsEditor::on_button_remove_clicked()
 {
     if(ui->lineEdit_choosenItem->text() != NULL)
     {
-            QVariant id_toDel = ui->lineEdit_choosenItem->text();
+        QVariant id_toDel = ui->lineEdit_choosenItem->text();
 
-            if (dataRequest.remove_data(id_toDel.toInt()) == true)
-            {
-                ui->lineEdit_choosenItem->clear();
-            }
-            else{
-                Error_popup err;
-                err.set_text("ID is unknown! Use list or search field above.");
-                err.exec();
-                }
+        if (dataRequest.remove_data(id_toDel.toInt()) == true)
+        {
+            ui->lineEdit_choosenItem->clear();
+        }
+        else{
+            Error_popup err;
+            err.set_text("ID is unknown! Use list or search field above.");
+            err.exec();
+        }
 
-            setupQListView();
+        setupQListView();
     }
     else{
         Error_popup err;
         err.set_text("Entry missing! Please enter ID.");
         err.exec();
-            }
+    }
 
 }
 
@@ -121,7 +121,7 @@ void StudentsEditor::on_button_edit_clicked()
         newName = inputBox.get_name();
         if(dataRequest.edit_data(newName) == true)
         {
-        setupQListView();
+            setupQListView();
         }
         else{
             Error_popup err;

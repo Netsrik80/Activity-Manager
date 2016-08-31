@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     error_popup.cpp \
     activityeditor.cpp \
     manager_gui.cpp \
-    manager_dataservice.cpp
+    manager_dataservice.cpp \
+    entity.cpp
 
 HEADERS  += mainmenu.h \
     fileowner.h \
@@ -33,7 +34,8 @@ HEADERS  += mainmenu.h \
     error_popup.h \
     activityeditor.h \
     manager_gui.h \
-    manager_dataservice.h
+    manager_dataservice.h \
+    entity.h
 
 FORMS    += mainmenu.ui \
     studentseditor.ui \

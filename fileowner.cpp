@@ -11,6 +11,7 @@
 
 using namespace std;
 
+/// Setting of filenames
 void Fileowner::setDatabase()
 {
     studentsDB = "nameslist.csv";
@@ -18,10 +19,13 @@ void Fileowner::setDatabase()
     combinationsDB = "combinationslist.csv";
 }
 
+
+/// Constructor
 Fileowner::Fileowner()
 {
     setDatabase();
 }
+
 
 ///Writes data (a QStringList) to the file
 void Fileowner::writeToFile(QString reqFile, QStringList list)
@@ -35,13 +39,14 @@ void Fileowner::writeToFile(QString reqFile, QStringList list)
 
     for(int i=0; i < list.size(); i++)
     {
-        out<< list[i]<<endl;
+        if(!list[i].isNull()) { out<< list[i]<<endl;}
     }
 
     //close file
     myfile.flush();
     myfile.close();
 }
+
 
 ///Reads the data from the file and creates a QVector that contains objects with two values
 void Fileowner::readFromFile(QString reqFile)
@@ -59,7 +64,7 @@ void Fileowner::readFromFile(QString reqFile)
         //setup QVector (int, int) from file
         do{
             inLine = inStream.readLine();
-            if(!inLine.isNull())
+            if(!inLine.isNull() && (inLine != "" ) )
             {
                 QStringList strList;
                 strList.append(inLine.split(","));
@@ -102,6 +107,7 @@ void Fileowner::get_Data(QString file)
 {
     readFromFile(file);
 }
+
 
 ///Public function to send data to a file
 void Fileowner::set_Data(QString file, QStringList list)

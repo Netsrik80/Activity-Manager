@@ -32,11 +32,13 @@ private slots:
 
     void on_pushButton_save_clicked();
 
-
 private:
     Ui::StudentsEditor *ui;
+
     void setupQListView();
+
     QStringListModel thisModel;
+
     Dataservice dataRequest; ///only access to data
 
 };
